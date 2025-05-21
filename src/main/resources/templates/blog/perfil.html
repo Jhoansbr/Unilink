@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras springsecurity3" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UniLink: Explora nuestro blog con artículos interesantes y únete a la comunidad.">
+    <meta name="keywords" content="blog, artículos, comunidad, noticias, unelink">
+    <meta name="author" content="UniLink Team">
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="UniLink - Blog de Contenido Interesante">
+    <meta property="og:description" content="Explora artículos sobre diversos temas y únete a la comunidad de UniLink.">
+    <meta property="og:image" content="/img/logo.png">
+    <meta property="og:url" content="https://unilink.com">
+    <meta property="og:type" content="website">
+    <title>UniLink</title>
+    <link rel="icon" href="/img/icono.ico" type="image/x-icon">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #fb9a24;
+            --text-color: #212529;
+            --bg-light: #f8f9fa;
+            --bg-dark: #121212;
+            --navbar-bg-light: #ffffff;
+            --navbar-bg-dark: #0e0e0e;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Modo claro y oscuro */
+        body.light-theme {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        body.dark-theme {
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .navbar {
+            background-color: var(--navbar-bg-dark);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-theme .nav-icon, body.dark-theme .search-form .input-group-text {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .nav-icon:hover {
+            color: #fb9a24;
+        }
+
+        body.dark-theme .search-form .input-group {
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+        }
+
+        body.dark-theme .search-form .form-control {
+            color: #e0e0e0;
+            background-color: transparent;
+        }
+
+        body.dark-theme .search-form .form-control::placeholder {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .dropdown-menu {
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+        }
+
+        body.dark-theme .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .dropdown-item:hover {
+            background-color: #3a3a3a;
+            color: #fb9a24;
+        }
+
+        body.dark-theme .card {
+            background-color: #1e2a38;
+            border-color: #4a4a4a;
+        }
+
+        /* --- Estilos del Navbar --- */
+        .navbar {
+            background-color: var(--navbar-bg-light);
+            box-shadow: var(--shadow);
+            padding: 0.75rem 1rem;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-brand img {
+            height: 36px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand img:hover {
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        body.light-theme .logo-dark,
+        body.dark-theme .logo-light {
+            display: none;
+        }
+
+        body.light-theme .logo-light,
+        body.dark-theme .logo-dark {
+            display: inline;
+        }
+
+        /* Contenedor del navbar */
+        #navbarContent {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* Contenedor del buscador (dentro del navbar para pantallas grandes) */
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 0.5rem;
+            position: relative;
+        }
+
+        /* Contenedor del buscador para pantallas pequeñas (debajo del navbar) */
+        .search-container-mobile {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--navbar-bg-light);
+            box-shadow: var(--shadow);
+            padding: 0.5rem 1rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .search-container-mobile {
+            background-color: var(--navbar-bg-dark);
+        }
+
+        /* Ícono de búsqueda para pantallas pequeñas */
+        .search-icon {
+            display: none; /* Oculta por defecto en pantallas grandes */
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin: 0 0.4rem;
+        }
+
+        body.dark-theme .search-icon {
+            color: #e0e0e0;
+        }
+
+        .search-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        /* Formulario de búsqueda */
+        .search-form {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .search-form .input-group {
+            background-color: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #282d31;
+            transition: border-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form .input-group:hover {
+            border-color: #929292;
+        }
+
+        .search-form .input-group-text {
+            background-color: transparent;
+            border: none;
+            padding: 0.375rem 0.5rem;
+            color: #333;
+        }
+
+        .search-form .form-control {
+            background-color: transparent;
+            border: none;
+            color: #333;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            flex-grow: 1;
+            border-radius: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .search-form .form-control::placeholder {
+            color: #333;
+            opacity: 0.7;
+        }
+
+        .search-form .form-control:focus {
+            background-color: transparent;
+            color: #333;
+            box-shadow: none;
+        }
+
+        /* Estilos para el autocompletado en modo claro */
+        body.light-theme .search-form .form-control:-webkit-autofill,
+        body.light-theme .search-form .form-control:-webkit-autofill:hover,
+        body.light-theme .search-form .form-control:-webkit-autofill:focus,
+        body.light-theme .search-form .form-control:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+            -webkit-text-fill-color: #333 !important;
+            background-color: transparent !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        /* Estilos para el autocompletado en modo oscuro */
+        body.dark-theme .search-form .form-control:-webkit-autofill,
+        body.dark-theme .search-form .form-control:-webkit-autofill:hover,
+        body.dark-theme .search-form .form-control:-webkit-autofill:focus,
+        body.dark-theme .search-form .form-control:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #2a2a2a inset !important;
+            -webkit-text-fill-color: #e0e0e0 !important;
+            background-color: transparent !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .search-form .form-control::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 16px;
+            width: 16px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-right: 0.5rem;
+        }
+
+        body.dark-theme .search-form .input-group-text {
+            color: #f0f0f0;
+        }
+
+        body.dark-theme .search-form .form-control {
+            color: #e0e0e0;
+            background-color: transparent;
+        }
+
+        body.dark-theme .search-form .form-control::placeholder {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .search-form .form-control::-webkit-search-cancel-button {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e0e0e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+
+        /* Botón de cerrar búsqueda */
+        .close-search {
+            display: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        body.dark-theme .close-search {
+            color: #e0e0e0;
+        }
+
+        .close-search:hover {
+            color: var(--primary-color);
+        }
+
+        /* Iconos de navegación */
+        .nav-icon {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin: 0 0.4rem;
+            position: relative;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .nav-icon.notification::after {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            visibility: visible;
+        }
+
+        .nav-icon.notification[data-count="0"]::after {
+            visibility: hidden;
+        }
+
+        .nav-profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-profile:hover {
+            transform: scale(1.1);
+        }
+
+        .separator {
+            color: #6c757d;
+            margin: 0 0.4rem;
+            font-size: 1rem;
+        }
+
+        /* Separador específico para el ícono de búsqueda */
+        .search-separator {
+            display: none; /* Oculta por defecto en pantallas grandes */
+            color: #6c757d;
+            margin: 0 0.4rem;
+            font-size: 1rem;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background-color: #ffffff;
+            min-width: 160px;
+        }
+
+        .dropdown-item {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item i {
+            font-size: 1rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Estilos para la ventana de notificaciones */
+        .notification-panel {
+            position: absolute;
+            top: 100%;
+            right: 10px;
+            width: 350px;
+            max-height: 300px;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+            display: none;
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+        }
+
+        .notification-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notification-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-theme .notification-panel::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .notification-panel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .notification-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        body.light-theme .notification-panel {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        body.dark-theme .notification-panel {
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .notification-header {
+            border-bottom: 1px solid #444;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .notification-mark-read {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-mark-read input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .notification-mark-read-label {
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        body.light-theme .notification-mark-read-label {
+            color: #333;
+        }
+
+        body.dark-theme .notification-mark-read-label {
+            color: #e0e0e0;
+        }
+
+        .notification-body {
+            font-size: 14px;
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        body.light-theme .notification-body {
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .notification-body {
+            border-bottom: 1px solid #444;
+        }
+
+        .notification-body:last-child {
+            border-bottom: none;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        body.light-theme .notification-time {
+            color: #666;
+            font-size: 12px;
+        }
+
+        body.dark-theme .notification-time {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .notification-link {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .notification-body::before {
+            content: "📌";
+            margin-right: 5px;
+        }
+
+        .see-all {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .see-all a {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Estilos de posts */
+        .post-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-card .card-img-top {
+            border-radius: 10px 10px 0 0;
+            object-fit: cover;
+            height: 200px;
+        }
+
+        .post-card .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Estilos para el cuadro de "Próximamente" en el main */
+        .post-card .card-body h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* Estilos específicos para el cuadro de "Próximamente" en modo oscuro */
+        body.dark-theme .post-card .card-body h1 {
+            color: #ffffff; /* Texto blanco en modo oscuro */
+        }
+
+        body.dark-theme .post-card {
+            background-color: #333; /* Fondo #333 en modo oscuro */
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .search-container {
+                flex-grow: 0;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .nav-icons {
+                flex-wrap: nowrap;
+                gap: 0.3rem;
+            }
+            .separator {
+                display: none;
+            }
+            .navbar {
+                padding: 0.5rem;
+            }
+            .dropdown-menu {
+                min-width: 140px;
+            }
+        }
+
+        @media (max-width: 987px) {
+            .navbar-brand img {
+                height: 30px;
+            }
+            .nav-icon {
+                font-size: 1rem;
+                margin: 0 0.3rem;
+            }
+            .nav-profile {
+                width: 28px;
+                height: 28px;
+            }
+            .search-container {
+                display: none;
+            }
+            .search-icon {
+                display: block;
+            }
+            .close-search {
+                display: block;
+            }
+            .separator {
+                display: block;
+            }
+            .search-separator {
+                display: block;
+            }
+        }
+
+        @media (min-width: 987px) {
+            .search-icon {
+                display: none !important;
+            }
+            .search-container-mobile {
+                display: none !important;
+            }
+            .search-separator {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-icon {
+                font-size: 0.9rem;
+                margin: 0 0.2rem;
+            }
+            .nav-profile {
+                width: 24px;
+                height: 24px;
+            }
+            .navbar-brand img {
+                height: 28px;
+            }
+            .search-icon {
+                font-size: 1rem;
+            }
+            .dropdown-menu {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <header>
+        <nav class="navbar navbar-expand" role="navigation" aria-label="Navegación principal">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand" th:href="@{/}" aria-label="Volver a la página de inicio de UniLink">
+                    <div class="logo-container">
+                        <img th:src="@{/img/logo_sf.png}" class="logo-light hidden" alt="Logo de UniLink (modo claro)" width="36" height="36" loading="lazy">
+                        <img th:src="@{/img/logo_oscuro_sf.png}" class="logo-dark hidden" alt="Logo de UniLink (modo oscuro)" width="36" height="36" loading="lazy">
+                    </div>
+                </a>
+                <!-- Contenido del navbar -->
+                <div id="navbarContent">
+                    <!-- Buscador para pantallas grandes -->
+                    <div class="search-container">
+                        <form class="d-flex search-form my-2 my-lg-0" th:action="@{/search}" method="get" role="search" aria-label="Buscar en el blog">
+                            <div class="input-group">
+                                <span class="input-group-text" aria-hidden="true">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input class="form-control" type="search" name="q" id="searchInputLarge" placeholder="Buscar en UniLink" aria-label="Buscar artículos en UniLink" required>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Iconos de navegación -->
+                    <div class="nav-icons d-flex align-items-center ms-auto">
+                        <span class="search-icon" id="searchIcon" aria-label="Abrir buscador">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <span class="search-separator">|</span>
+                        <a th:href="@{/index_blog}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inicio" aria-label="Ir a la página de inicio">
+                            <i class="bi bi-house-door-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a th:href="@{/nuevo_post}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Crear Post" aria-label="Crear un nuevo post">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a th:href="@{/monitor}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Monitor" aria-label="Ver Monitores">
+                            <i class="bi bi-person-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a href="#" class="nav-icon notification" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones" aria-label="Ver notificaciones" data-count="0" onclick="toggleNotifications()">
+                            <i class="bi bi-bell-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <!-- Menú desplegable de perfil -->
+                        <div class="dropdown">
+                            <a href="#" class="nav-icon" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opciones de perfil de usuario">
+                                <img th:src="@{/img/perfil.jpg}" alt="Foto de perfil del usuario" class="nav-profile" loading="lazy">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" th:href="@{/perfil}"><i class="bi bi-person"></i> Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="themeToggle"><i class="bi bi-moon"></i> Modo Noche</a></li>
+                                <li><a class="dropdown-item" th:href="@{/config}"><i class="bi bi-gear"></i> Configuración</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" th:href="@{/custom-logout}"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-container-mobile">
+                <form class="d-flex search-form my-2 my-lg-0" th:action="@{/search}" method="get" role="search" aria-label="Buscar en el blog">
+                    <div class="input-group">
+                        <span class="input-group-text" aria-hidden="true">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input class="form-control" type="search" name="q" id="searchInputMobile" placeholder="Buscar en UniLink" aria-label="Buscar artículos en UniLink" required>
+                        <span class="close-search" id="closeSearch" aria-label="Cerrar buscador">
+                            
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Contenedor de notificaciones -->
+            <div id="notificationPanel" class="notification-panel">
+                <div class="notification-header">
+                    <span class="notification-title">Notificaciones</span>
+                    <div class="notification-mark-read">
+                        <input type="checkbox" id="markReadCheckbox" aria-label="Marcar todas las notificaciones como leídas">
+                        <label class="notification-mark-read-label" for="markReadCheckbox">Marcar como leídas</label>
+                    </div>
+                </div>
+                <div th:each="notif : ${notificaciones}" class="notification-body">
+                    <div class="notification-text">
+                        <span th:text="${notif.mensaje}">Texto de la notificación</span><br>
+                        <span class="notification-time" th:text="${notif.fecha_notificacion}">hace 10 minutos</span><br>
+                        <a href="#" class="notification-link">Ver más</a>
+                    </div>
+                </div>
+                <div class="see-all">
+                    <a th:href="@{/notificaciones}">Ver todo</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+     <main class="container my-5" id="main-content">
+      <div class="row perfil-container">
+      <section class="col-md-8 mb-3">
+        <div class="card mb-3 text-center p-3">
+          <div class="foto mx-auto mb-2"></div>
+          <h2 class="fw-bold mt-2">Nombre del Usuario</h2>
+          <p class="text-muted"><i class="bi bi-mortarboard-fill"></i> Ingeniería de Sistemas</p>
+          <p><strong>Presentación:</strong> Apasionado por compartir conocimiento y apoyar a otros estudiantes.</p>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-tools"></i> Área de Apoyo</h3>
+          <p>Redes, Programación, Sistemas Operativos.</p>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-card-text"></i> Descripción</h3>
+          <p>Monitor con experiencia en asesorías académicas personalizadas, talleres grupales y desarrollo de proyectos estudiantiles.</p>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-envelope"></i> Contacto</h3>
+          <p><strong>Teléfono:</strong> 000000000</p>
+          <p><strong>Email:</strong> ejemplo@correo.com</p>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-warning btn-lg">📬 Solicitar Monitoría</button>
+        </div>
+      </section>
+
+      <aside class="col-md-4">
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-stars"></i> Logros</h3>
+          <p class="mb-1">★★★★★</p>
+          <span class="badge bg-success highlight-badge">Monitor experto</span>
+          <span class="badge bg-primary highlight-badge">+50 asesorías</span>
+          <span class="badge bg-warning text-dark highlight-badge">Top 1 en votaciones</span>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-trophy"></i> Ranking de Monitores</h3>
+          <ol class="mb-0">
+            <li>Monitor 1</li>
+            <li>Monitor 2</li>
+          </ol>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-megaphone"></i> Noticias</h3>
+          <ul class="mb-0">
+            <li>Evento académico el lunes</li>
+            <li>Inscripciones abiertas a semilleros</li>
+          </ul>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-calendar-event"></i> Eventos</h3>
+          <ul class="mb-0">
+            <li>Charla técnica de redes</li>
+            <li>Simulacro de entrevista técnica</li>
+          </ul>
+        </div>
+
+        <div class="card mb-3 p-3">
+          <h3><i class="bi bi-chat-dots"></i> Opiniones de Estudiantes</h3>
+          <blockquote>
+            “Siempre me explica con ejemplos fáciles de entender.”
+            <footer class="blockquote-footer mt-1">Daniela, 5° semestre</footer>
+          </blockquote>
+          <blockquote>
+            “Gracias a sus tutorías mejoré mis notas en programación.”
+            <footer class="blockquote-footer mt-1">Carlos, primer semestre</footer>
+          </blockquote>
+        </div>
+      </aside>
+    </div>
+    </main>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Función para mostrar u ocultar el panel de notificaciones
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar tooltips
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+
+            // Actualizar el indicador de notificaciones
+            const notificationIcon = document.querySelector('.nav-icon.notification');
+            const notificationBodies = document.querySelectorAll('.notification-body');
+            const notificationCount = notificationBodies.length;
+            notificationIcon.setAttribute('data-count', notificationCount > 0 ? '1' : '0');
+
+            // Modo noche/día
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const logoLight = document.querySelector('.logo-light');
+            const logoDark = document.querySelector('.logo-dark');
+
+            // Cargar tema inicial desde localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.classList.remove('light-theme', 'dark-theme');
+            body.classList.add(`${savedTheme}-theme`);
+
+            // Mostrar el logo inicial basado en el tema guardado
+            if (savedTheme === 'light') {
+                logoLight.classList.remove('hidden');
+            } else {
+                logoDark.classList.remove('hidden');
+            }
+
+            // Actualizar texto e ícono del botón de tema
+            themeToggle.querySelector('i').classList.add(savedTheme === 'light' ? 'bi-moon' : 'bi-sun');
+            themeToggle.querySelector('i').classList.remove(savedTheme === 'light' ? 'bi-sun' : 'bi-moon');
+            themeToggle.lastChild.nodeValue = savedTheme === 'light' ? ' Modo Noche' : ' Modo Día';
+
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isLight = body.classList.contains('light-theme');
+                body.classList.replace(isLight ? 'light-theme' : 'dark-theme', isLight ? 'dark-theme' : 'light-theme');
+                localStorage.setItem('theme', isLight ? 'dark' : 'light');
+                themeToggle.querySelector('i').classList.replace(isLight ? 'bi-moon' : 'bi-sun', isLight ? 'bi-sun' : 'bi-moon');
+                themeToggle.lastChild.nodeValue = isLight ? ' Modo Día' : ' Modo Noche';
+
+                // Actualizar visibilidad del logo
+                logoLight.classList.add('hidden');
+                logoDark.classList.add('hidden');
+                if (isLight) {
+                    logoDark.classList.remove('hidden');
+                } else {
+                    logoLight.classList.remove('hidden');
+                }
+            });
+
+            // Limpiar campo de búsqueda (pantallas grandes)
+            const searchInputLarge = document.getElementById('searchInputLarge');
+            searchInputLarge.addEventListener('input', () => {
+                searchInputLarge.value = searchInputLarge.value.trimStart();
+            });
+
+            // Manejar el buscador en pantallas pequeñas
+            const searchIcon = document.getElementById('searchIcon');
+            const searchFormMobile = document.querySelector('.search-container-mobile .search-form');
+            const closeSearch = document.getElementById('closeSearch');
+            const searchContainerMobile = document.querySelector('.search-container-mobile');
+            const searchInputMobile = document.getElementById('searchInputMobile');
+            const searchContainer = document.querySelector('.search-container');
+
+            // Función para actualizar el estado del buscador según el tamaño de la ventana
+            const updateSearchState = () => {
+                const windowWidth = window.innerWidth;
+                const breakpoint = 986;
+
+                if (windowWidth > breakpoint) {
+                    searchContainer.style.display = 'flex';
+                    searchIcon.style.display = 'none';
+                    searchContainerMobile.style.display = 'none';
+                    searchFormMobile.classList.remove('active');
+                    searchInputMobile.value = '';
+                } else {
+                    searchContainer.style.display = 'none';
+                    searchIcon.style.display = searchContainerMobile.style.display === 'block' ? 'none' : 'block';
+                }
+            };
+
+            // Ejecutar al cargar la página
+            updateSearchState();
+
+            // Mostrar el buscador móvil al hacer clic en el ícono
+            searchIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                searchContainerMobile.style.display = 'block';
+                searchFormMobile.classList.add('active');
+                searchIcon.style.display = 'none';
+                searchInputMobile.focus();
+            });
+
+            // Cerrar el buscador móvil al hacer clic en el botón de cerrar
+            closeSearch.addEventListener('click', (e) => {
+                e.stopPropagation();
+                searchFormMobile.classList.remove('active');
+                searchIcon.style.display = 'block';
+                searchInputMobile.value = '';
+                searchContainerMobile.style.display = 'none';
+            });
+
+            // Cerrar el buscador móvil al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!searchFormMobile.contains(e.target) && !searchIcon.contains(e.target)) {
+                    searchFormMobile.classList.remove('active');
+                    searchIcon.style.display = 'block';
+                    searchInputMobile.value = '';
+                    searchContainerMobile.style.display = 'none';
+                }
+            });
+
+            // Evitar que el clic dentro del formulario móvil cierre el buscador
+            searchFormMobile.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Limpiar campo de búsqueda (pantallas pequeñas)
+            searchInputMobile.addEventListener('input', () => {
+                searchInputMobile.value = searchInputMobile.value.trimStart();
+            });
+
+            // Actualizar el estado del buscador al cambiar el tamaño de la ventana
+            window.addEventListener('resize', updateSearchState);
+        });
+    </script>
+</body>
+</html>

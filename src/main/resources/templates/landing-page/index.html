@@ -13,7 +13,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <style>
     #inicio {
     height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/fondo.jpg') center/cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("@{IMG/fondo.jpg}") center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +25,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!-- Navigation Bar -->
     <nav>
         <div class="logo-container">
-            <a href="#inicial"><img src="/IMG/logo_oscuro_sf.png" alt="logo Blog" class="logo_menu"></a>
+            <a href="#inicial"><img th:src="@{/IMG/logo_oscuro_sf.png}" alt="logo Blog" class="logo_menu"></a>
         </div>
         <div class="nav-menu">
             <ul>

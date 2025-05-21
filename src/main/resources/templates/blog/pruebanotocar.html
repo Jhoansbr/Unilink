@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UniLink: Explora nuestro blog con artículos interesantes y únete a la comunidad.">
+    <meta name="keywords" content="blog, artículos, comunidad, noticias, unelink">
+    <meta name="author" content="UniLink Team">
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="UniLink - Blog de Contenido Interesante">
+    <meta property="og:description" content="Explora artículos sobre diversos temas y únete a la comunidad de UniLink.">
+    <meta property="og:image" content="/img/logo.png">
+    <meta property="og:url" content="https://unilink.com">
+    <meta property="og:type" content="website">
+    <title>UniLink</title>
+    <link rel="icon" href="/img/icono.ico" type="image/x-icon">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #fb9a24;
+            --text-color: #212529;
+            --bg-light: #f8f9fa;
+            --bg-dark: #121212;
+            --navbar-bg-light: #ffffff;
+            --navbar-bg-dark: #0e0e0e;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --item-height: 300px; /* Fixed height for side column items */
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevent page-level scroll */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Modo claro y oscuro */
+        body.light-theme {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        body.dark-theme {
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .navbar {
+            background-color: var(--navbar-bg-dark);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-theme .nav-icon, body.dark-theme .search-form .input-group-text {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .nav-icon:hover {
+            color: #fb9a24;
+        }
+
+        body.dark-theme .search-form .input-group {
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+        }
+
+        body.dark-theme .search-form .form-control {
+            color: #e0e0e0;
+            background-color: transparent;
+        }
+
+        body.dark-theme .search-form .form-control::placeholder {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .dropdown-menu {
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+        }
+
+        body.dark-theme .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .dropdown-item:hover {
+            background-color: #3a3a3a;
+            color: #fb9a24;
+        }
+
+        body.dark-theme .card {
+            background-color: #1e2a38;
+            border-color: #4a4a4a;
+        }
+
+        /* --- Estilos del Navbar --- */
+        .navbar {
+            background-color: var(--navbar-bg-light);
+            box-shadow: var(--shadow);
+            padding: 0.75rem 1rem;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-brand img {
+            height: 36px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand img:hover {
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        body.light-theme .logo-dark,
+        body.dark-theme .logo-light {
+            display: none;
+        }
+
+        body.light-theme .logo-light,
+        body.dark-theme .logo-dark {
+            display: inline;
+        }
+
+        /* Contenedor del navbar */
+        #navbarContent {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* Contenedor del buscador (dentro del navbar para pantallas grandes) */
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 0.5rem;
+            position: relative;
+        }
+
+        /* Contenedor del buscador para pantallas pequeñas (debajo del navbar) */
+        .search-container-mobile {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--navbar-bg-light);
+            box-shadow: var(--shadow);
+            padding: 0.5rem 1rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .search-container-mobile {
+            background-color: var(--navbar-bg-dark);
+        }
+
+        /* Ícono de búsqueda para pantallas pequeñas */
+        .search-icon {
+            display: none; /* Oculta por defecto en pantallas grandes */
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin: 0 0.4rem;
+        }
+
+        body.dark-theme .search-icon {
+            color: #e0e0e0;
+        }
+
+        .search-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        /* Formulario de búsqueda */
+        .search-form {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .search-form .input-group {
+            background-color: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #282d31;
+            transition: border-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-form .input-group:hover {
+            border-color: #929292;
+        }
+
+        .search-form .input-group-text {
+            background-color: transparent;
+            border: none;
+            padding: 0.375rem 0.5rem;
+            color: #333;
+        }
+
+        .search-form .form-control {
+            background-color: transparent;
+            border: none;
+            color: #333;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            flex-grow: 1;
+            border-radius: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .search-form .form-control::placeholder {
+            color: #333;
+            opacity: 0.7;
+        }
+
+        .search-form .form-control:focus {
+            background-color: transparent;
+            color: #333;
+            box-shadow: none;
+        }
+
+        /* Estilos para el autocompletado en modo claro */
+        body.light-theme .search-form .form-control:-webkit-autofill,
+        body.light-theme .search-form .form-control:-webkit-autofill:hover,
+        body.light-theme .search-form .form-control:-webkit-autofill:focus,
+        body.light-theme .search-form .form-control:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+            -webkit-text-fill-color: #333 !important;
+            background-color: transparent !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        /* Estilos para el autocompletado en modo oscuro */
+        body.dark-theme .search-form .form-control:-webkit-autofill,
+        body.dark-theme .search-form .form-control:-webkit-autofill:hover,
+        body.dark-theme .search-form .form-control:-webkit-autofill:focus,
+        body.dark-theme .search-form .form-control:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #2a2a2a inset !important;
+            -webkit-text-fill-color: #e0e0e0 !important;
+            background-color: transparent !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .search-form .form-control::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 16px;
+            width: 16px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-right: 0.5rem;
+        }
+        
+        body.dark-theme .search-form .input-group-text {
+            color: #f0f0f0;
+        }
+
+        body.dark-theme .search-form .form-control {
+            color: #e0e0e0;
+            background-color: transparent;
+        }
+
+        body.dark-theme .search-form .form-control::placeholder {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .search-form .form-control::-webkit-search-cancel-button {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e0e0e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+
+        /* Botón de cerrar búsqueda */
+        .close-search {
+            display: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        body.dark-theme .close-search {
+            color: #e0e0e0;
+        }
+
+        .close-search:hover {
+            color: var(--primary-color);
+        }
+
+        /* Iconos de navegación */
+        .nav-icon {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin: 0 0.4rem;
+            position: relative;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .nav-icon.notification::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            color: #ffffff;
+            font-size: 0.7rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            visibility: visible;
+        }
+
+        .nav-icon.notification[data-count="0"]::after {
+            visibility: hidden;
+        }
+
+        .nav-profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-profile:hover {
+            transform: scale(1.1);
+        }
+
+        .separator {
+            color: #6c757d;
+            margin: 0 0.4rem;
+            font-size: 1rem;
+        }
+
+        /* Separador específico para el ícono de búsqueda */
+        .search-separator {
+            display: none; /* Oculta por defecto en pantallas grandes */
+            color: #6c757d;
+            margin: 0 0.4rem;
+            font-size: 1rem;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background-color: #ffffff;
+            min-width: 160px;
+        }
+
+        .dropdown-item {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item i {
+            font-size: 1rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Estilos de posts */
+        .post-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s ease, background-color 0.3s ease;
+            background-color: #ffffff;
+            margin-bottom: 1rem;
+            position: relative;
+            cursor: pointer; /* Indicate the post is clickable */
+        }
+
+        body.dark-theme .post-card {
+            background-color: #1e2a38;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background-color: #f5f5f5;
+        }
+
+        body.dark-theme .post-card:hover {
+            background-color: #2a3a48;
+        }
+
+        /* Style for the link inside post-card */
+        .post-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .post-header {
+            border-bottom: 1px solid #4a4a4a;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.75rem;
+        }
+
+        .post-user-info {
+            flex-grow: 1;
+        }
+
+        .post-username {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        body.dark-theme .post-username {
+            color: #e0e0e0;
+        }
+
+        .post-timestamp {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        body.dark-theme .post-timestamp {
+            color: #aaa;
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 0.5rem 1rem;
+            color: #333;
+        }
+
+        body.dark-theme .post-title {
+            color: #e0e0e0;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+            aspect-ratio: 16 / 9; /* Enforce aspect ratio for consistency */
+        }
+
+        .post-body {
+            padding: 1rem;
+        }
+
+        .post-text {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        body.dark-theme .post-text {
+            color: #ccc;
+        }
+
+        .post-read-more {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .post-read-more:hover {
+            text-decoration: underline;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-top: 1px solid #ddd;
+        }
+
+        body.dark-theme .post-actions {
+            border-top: 1px solid #4a4a4a;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .post-action {
+            color: #aaa;
+        }
+
+        .post-action:hover {
+            color: var(--primary-color);
+        }
+
+        .post-action i {
+            font-size: 1rem;
+        }
+
+        .post-action span {
+            font-size: 0.9rem;
+        }
+
+        /* Post Menu Styles */
+        .post-menu {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .post-menu {
+            color: #aaa;
+        }
+
+        .post-menu:hover {
+            color: var(--primary-color);
+        }
+
+        .post-menu .dropdown-menu {
+            min-width: 150px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            top: 100%;
+            right: 0;
+            left: auto;
+        }
+
+        body.dark-theme .post-menu .dropdown-menu {
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+        }
+
+        .post-menu .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        body.dark-theme .post-menu .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        .post-menu .dropdown-item:hover {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        body.dark-theme .post-menu .dropdown-item:hover {
+            background-color: #3a3a3a;
+        }
+
+        /* Prevent hover background change on menu area */
+        .post-menu:hover {
+            background-color: transparent !important;
+        }
+
+        /* Banner Image Styles */
+        .banner-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            aspect-ratio: 16 / 9; /* Enforce aspect ratio for consistency */
+        }
+
+        /* Specific height for banner-ads */
+        .banner-ads .banner-image {
+            height: 250px; /* Increased height for banner-ads */
+        }
+
+        /* Intro Perfil Styles (Updated) */
+        .intro-perfil {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            text-align: center;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: -70px; /* Overlap with banner */
+            border: 4px solid #ffffff;
+        }
+
+        body.dark-theme .profile-avatar {
+            border-color: #1e2a38;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0.5rem 0;
+            padding: 0 1rem;
+        }
+
+        body.dark-theme .profile-name {
+            color: #e0e0e0;
+        }
+
+        .profile-graphs {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .profile-graph {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        body.dark-theme .profile-graph {
+            color: #aaa;
+        }
+
+        .profile-graph strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        body.dark-theme .profile-graph strong {
+            color: #e0e0e0;
+        }
+
+        .profile-section {
+            font-size: 0.9rem;
+            color: #555;
+            padding: 0.5rem 1rem;
+            background-color: #f1f1f1;
+            border-radius: 0;
+            width: 100%;
+        }
+
+        body.dark-theme .profile-section {
+            color: #ccc;
+            background-color: #2a2a2a;
+        }
+
+        .profile-divider {
+            width: 100%;
+            height: 1px;
+            background-color: #ddd;
+            margin: 0.5rem 0;
+        }
+
+        body.dark-theme .profile-divider {
+            background-color: #4a4a4a;
+        }
+
+         .profile-type-date {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 1rem;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark-theme .profile-type-date {
+            color: #ccc;
+        }
+
+        .profile-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .profile-links a {
+            color: #1da1f2;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .profile-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .profile-links .link-separator {
+            color: #6c757d;
+        }
+
+        body.dark-theme .profile-links .link-separator {
+            color: #aaa;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .search-container {
+                flex-grow: 0;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .nav-icons {
+                flex-wrap: nowrap;
+                gap: 0.3rem;
+            }
+            .separator {
+                display: none;
+            }
+            .navbar {
+                padding: 0.5rem;
+            }
+            .dropdown-menu {
+                min-width: 140px;
+            }
+        }
+
+        @media (max-width: 987px) {
+            .navbar-brand img {
+                height: 30px;
+            }
+            .nav-icon {
+                font-size: 1rem;
+                margin: 0 0.3rem;
+            }
+            .nav-profile {
+                width: 28px;
+                height: 28px;
+            }
+            .post-image {
+                height: 150px;
+            }
+            .banner-image {
+                height: 160px;
+            }
+            .banner-ads .banner-image {
+                height: 200px; /* Adjusted proportionally (80% of 250px) */
+            }
+            .search-container {
+                display: none;
+            }
+            .search-icon {
+                display: block;
+            }
+            .close-search {
+                display: block;
+            }
+            .separator {
+                display: block;
+            }
+            .search-separator {
+                display: block;
+            }
+        }
+
+        @media (min-width: 987px) {
+            .search-icon {
+                display: none !important;
+            }
+            .search-container-mobile {
+                display: none !important;
+            }
+            .search-separator {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-icon {
+                font-size: 0.9rem;
+                margin: 0 0.2rem;
+            }
+            .nav-profile {
+                width: 24px;
+                height: 24px;
+            }
+            .navbar-brand img {
+                height: 28px;
+            }
+            .search-icon {
+                font-size: 1rem;
+            }
+            .dropdown-menu {
+                min-width: 120px;
+            }
+            .profile-banner {
+                height: 120px;
+            }
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                margin-top: -40px;
+            }
+            .profile-name {
+                font-size: 1.1rem;
+            }
+            .profile-graph {
+                font-size: 0.8rem;
+            }
+            .profile-section {
+                font-size: 0.8rem;
+            }
+            .profile-type-date {
+                font-size: 0.8rem;
+            }
+            .profile-links {
+                font-size: 0.8rem;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Estilos para la ventana de notificaciones */
+        .notification-panel {
+            position: absolute;
+            top: 100%;
+            right: 10px;
+            width: 350px;
+            max-height: 300px;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+            display: none;
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+        }
+
+        .notification-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notification-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-theme .notification-panel::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .notification-panel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .notification-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        body.light-theme .notification-panel {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        body.dark-theme .notification-panel {
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .notification-header {
+            border-bottom: 1px solid #444;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .notification-mark-read {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-mark-read input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .notification-mark-read-label {
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        body.light-theme .notification-mark-read-label {
+            color: #333;
+        }
+
+        body.dark-theme .notification-mark-read-label {
+            color: #e0e0e0;
+        }
+
+        .notification-body {
+            font-size: 14px;
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        body.light-theme .notification-body {
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .notification-body {
+            border-bottom: 1px solid #444;
+        }
+
+        .notification-body:last-child {
+            border-bottom: none;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        body.light-theme .notification-time {
+            color: #666;
+            font-size: 12px;
+        }
+
+        body.dark-theme .notification-time {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .notification-link {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .notification-body::before {
+            content: "📌";
+            margin-right: 5px;
+        }
+
+        .see-all {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .see-all a {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Estilos para el main */
+        main {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            gap: 0.5rem;
+            width: 100vw;
+            margin: 0;
+            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+        }
+
+        .grid-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .grid-column:nth-child(1),
+        .grid-column:nth-child(3) {
+            height: auto;
+        }
+
+        .grid-column:nth-child(2) {
+            padding-top: 0;
+        }
+
+        .grid-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.5rem;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .grid-column:nth-child(1) .grid-item,
+        .grid-column:nth-child(3) .grid-item {
+            max-height: var(--item-height);
+            flex: 0 0 var(--item-height);
+        }
+
+        .grid-column:nth-child(2) .grid-item {
+            max-height: none;
+            flex: 1 1 auto;
+            padding-top: 0;
+        }
+
+        body.dark-theme .grid-item {
+            border-color: #4a4a4a;
+            background-color: #1e2a38;
+        }
+
+        .grid-item::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .grid-item::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-theme .grid-item::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .grid-item::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .grid-item::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .center-column-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+            padding-top: 0;
+        }
+
+        .center-column-content .post-card,
+        .center-column-content .banner-top,
+        .center-column-content .banner-ads {
+            flex: 0 0 auto;
+        }
+
+        .center-column-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .center-column-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        body.dark-theme .center-column-content::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .center-column-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+
+        .center-column-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        @media (max-width: 992px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                height: auto;
+                overflow-y: auto;
+                padding: 0.5rem;
+            }
+
+            .grid-column {
+                grid-column: 1 / 2;
+                grid-row: auto;
+                height: auto;
+            }
+
+            .grid-column:nth-child(2) {
+                height: auto;
+            }
+
+            .grid-item {
+                max-height: 300px;
+                flex: 0 0 300px;
+            }
+
+            .grid-column:nth-child(2) .grid-item {
+                height: auto;
+                max-height: 300px;
+                flex: 0 0 300px;
+            }
+
+            .center-column-content {
+                max-height: calc(300px - 1rem);
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <header>
+        <nav class="navbar navbar-expand" role="navigation" aria-label="Navegación principal">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand" th:href="@{/}" aria-label="Volver a la página de inicio de UniLink">
+                    <div class="logo-container">
+                        <img th:src="@{/img/logo_sf.png}" class="logo-light hidden" alt="Logo de UniLink (modo claro)" width="36" height="36" loading="lazy">
+                        <img th:src="@{/img/logo_oscuro_sf.png}" class="logo-dark hidden" alt="Logo de UniLink (modo oscuro)" width="36" height="36" loading="lazy">
+                    </div>
+                </a>
+                <!-- Contenido del navbar -->
+                <div id="navbarContent">
+                    <!-- Buscador para pantallas grandes -->
+                    <div class="search-container">
+                        <form class="d-flex search-form my-2 my-lg-0" th:action="@{/search}" method="get" role="search" aria-label="Buscar en el blog">
+                            <div class="input-group">
+                                <span class="input-group-text" aria-hidden="true">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input class="form-control" type="search" name="q" id="searchInputLarge" placeholder="Buscar en UniLink" aria-label="Buscar artículos en UniLink" required>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Iconos de navegación -->
+                    <div class="nav-icons d-flex align-items-center ms-auto">
+                        <span class="search-icon" id="searchIcon" aria-label="Abrir buscador">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <span class="search-separator">|</span>
+                        <a th:href="@{/index_blog}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inicio" aria-label="Ir a la página de inicio">
+                            <i class="bi bi-house-door-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a th:href="@{/nuevo_post}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Crear Post" aria-label="Crear un nuevo post">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a th:href="@{/monitor}" class="nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Monitor" aria-label="Ver Monitores">
+                            <i class="bi bi-person-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <a href="#" class="nav-icon notification" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notificaciones" aria-label="Ver notificaciones" data-count="0" onclick="toggleNotifications()">
+                            <i class="bi bi-bell-fill"></i>
+                        </a>
+                        <span class="separator">|</span>
+                        <!-- Menú desplegable de perfil -->
+                        <div class="dropdown">
+                            <a href="#" class="nav-icon" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opciones de perfil de usuario">
+                                <img th:src="@{/img/perfil.jpg}" alt="Foto de perfil del usuario" class="nav-profile" loading="lazy">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" th:href="@{/perfil}"><i class="bi bi-person"></i> Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="themeToggle"><i class="bi bi-moon"></i> Modo Noche</a></li>
+                                <li><a class="dropdown-item" th:href="@{/config}"><i class="bi bi-gear"></i> Configuración</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-container-mobile">
+                <form class="d-flex search-form my-2 my-lg-0" th:action="@{/search}" method="get" role="search" aria-label="Buscar en el blog">
+                    <div class="input-group">
+                        <span class="input-group-text" aria-hidden="true">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input class="form-control" type="search" name="q" id="searchInputMobile" placeholder="Buscar en UniLink" aria-label="Buscar artículos en UniLink" required>
+                        <span class="close-search" id="closeSearch" aria-label="Cerrar buscador">
+                            
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Contenedor de notificaciones -->
+            <div id="notificationPanel" class="notification-panel">
+                <div class="notification-header">
+                    <span class="notification-title">Notificaciones</span>
+                    <div class="notification-mark-read">
+                        <input type="checkbox" id="markReadCheckbox" aria-label="Marcar todas las notificaciones como leídas">
+                        <label class="notification-mark-read-label" for="markReadCheckbox">Marcar como leídas</label>
+                    </div>
+                </div>
+                <!-- Las notificaciones se generarán aquí -->
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div class="grid-container">
+            <!-- Columna izquierda -->
+            <div class="grid-column">
+                <div class="grid-item intro-perfil">
+                    <img src="/img/ads.jpg" alt="Perfil Banner" class="profile-banner" loading="lazy">
+                    <img src="/img/perfil.jpg" alt="Foto de perfil" class="profile-avatar" loading="lazy">
+                    <h3 class="profile-name">Juan Pérez</h3>
+                    <span style="margin-top: 2px; margin-bottom: 2px;">Monitor</span>
+                    <div class="profile-divider"></div>
+                    <div class="profile-type-date">
+                        <span> En UniLink desde el 20/03/2025</span>
+                    </div>
+                    <div class="profile-divider"></div>
+                    <div class="profile-links">
+                        <a th:href="@{/grupo}">Grupo</a>
+                        <span class="link-separator">|</span>
+                        <a th:href="@{/perfil}">Perfil</a>
+                        <span class="link-separator">|</span>
+                        <a th:href="@{/estado}">Estado</a>
+                    </div>
+                </div>
+                <div class="grid-item eventos-nacionales">
+                    <h3>Eventos Nacionales</h3>
+                    <p>Lista de eventos nacionales...</p>
+                </div>
+            </div>
+
+            <!-- Columna central -->
+            <div class="grid-column">
+                <div class="grid-item center-column-content" id="centerColumnContent">
+                    <div class="banner-top">
+                        <h3 style="font-size: 20px; margin-top: 10px;">Ads</h3>
+                        <img src="/img/ads.jpg" alt="banner publicitario" class="banner-image" loading="lazy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="grid-column">
+                <div class="grid-item noticias">
+                    <h3>Noticias</h3>
+                    <p>Últimas noticias aquí...</p>
+                </div>
+                <div class="grid-item ranking-monitores">
+                    <h3>Ranking Monitores</h3>
+                    <p>Ranking de monitores...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Definir toggleNotifications globalmente
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Datos simulados de notificaciones
+        const notifications = [
+            {
+                text: "Usted ha realizado su entrega en la tarea Taller HTTP, FTP, unidades compartidas",
+                time: "hace 11 horas 18 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Usted ha realizado su entrega en la tarea Taller HTTP, FTP, unidades compartidas",
+                time: "hace 11 horas 18 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Vence el viernes, 16 de mayo de 2025, 07:50: Taller HTTP, FTP, unidades compartidas",
+                time: "hace 22 horas 48 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "CUC_SISTEMAS OPERATIVOS - 9883 - T01 cambio de contenido",
+                time: "hace 3 horas 7 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Nueva tarea asignada: Proyecto de Redes",
+                time: "hace 1 hora 5 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Recordatorio: Entrega de examen final",
+                time: "hace 30 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Actualización en el curso de Bases de Datos",
+                time: "hace 15 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Nueva notificación de curso: Introducción a la Programación",
+                time: "hace 10 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Cambio de horario en la clase de Algoritmos",
+                time: "hace 5 minutos",
+                link: "Ver notificación completa",
+                read: false
+            },
+            {
+                text: "Tarea calificada: Proyecto de Redes",
+                time: "hace 2 minutos",
+                link: "Ver notificación completa",
+                read: false
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar tooltips
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+
+            // Modo noche/día
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const logoLight = document.querySelector('.logo-light');
+            const logoDark = document.querySelector('.logo-dark');
+
+            // Cargar tema inicial desde localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.classList.remove('light-theme', 'dark-theme');
+            body.classList.add(`${savedTheme}-theme`);
+
+            // Mostrar el logo inicial basado en el tema guardado
+            if (savedTheme === 'light') {
+                logoLight.classList.remove('hidden');
+            } else {
+                logoDark.classList.remove('hidden');
+            }
+
+            // Actualizar texto e ícono del botón de tema
+            themeToggle.querySelector('i').classList.add(savedTheme === 'light' ? 'bi-moon' : 'bi-sun');
+            themeToggle.querySelector('i').classList.remove(savedTheme === 'light' ? 'bi-sun' : 'bi-moon');
+            themeToggle.lastChild.nodeValue = savedTheme === 'light' ? ' Modo Noche' : ' Modo Día';
+
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isLight = body.classList.contains('light-theme');
+                body.classList.replace(isLight ? 'light-theme' : 'dark-theme', isLight ? 'dark-theme' : 'light-theme');
+                localStorage.setItem('theme', isLight ? 'dark' : 'light');
+                themeToggle.querySelector('i').classList.replace(isLight ? 'bi-moon' : 'bi-sun', isLight ? 'bi-sun' : 'bi-moon');
+                themeToggle.lastChild.nodeValue = isLight ? ' Modo Día' : ' Modo Noche';
+
+                // Actualizar visibilidad del logo
+                logoLight.classList.add('hidden');
+                logoDark.classList.add('hidden');
+                if (isLight) {
+                    logoDark.classList.remove('hidden');
+                } else {
+                    logoLight.classList.remove('hidden');
+                }
+            });
+
+            // Limpiar campo de búsqueda (pantallas grandes)
+            const searchInputLarge = document.getElementById('searchInputLarge');
+            searchInputLarge.addEventListener('input', () => {
+                searchInputLarge.value = searchInputLarge.value.trimStart();
+            });
+
+            // Manejar el buscador en pantallas pequeñas
+            const searchIcon = document.getElementById('searchIcon');
+            const searchFormMobile = document.querySelector('.search-container-mobile .search-form');
+            const closeSearch = document.getElementById('closeSearch');
+            const searchContainerMobile = document.querySelector('.search-container-mobile');
+            const searchInputMobile = document.getElementById('searchInputMobile');
+            const searchContainer = document.querySelector('.search-container');
+
+            // Función para actualizar el estado del buscador según el tamaño de la ventana
+            const updateSearchState = () => {
+                const windowWidth = window.innerWidth;
+                const breakpoint = 986;
+
+                if (windowWidth > breakpoint) {
+                    searchContainer.style.display = 'flex';
+                    searchIcon.style.display = 'none';
+                    searchContainerMobile.style.display = 'none';
+                    searchFormMobile.classList.remove('active');
+                    searchInputMobile.value = '';
+                } else {
+                    searchContainer.style.display = 'none';
+                    searchIcon.style.display = searchContainerMobile.style.display === 'block' ? 'none' : 'block';
+                }
+            };
+
+            // Ejecutar al cargar la página
+            updateSearchState();
+
+            // Mostrar el buscador móvil al hacer clic en el ícono
+            searchIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                searchContainerMobile.style.display = 'block';
+                searchFormMobile.classList.add('active');
+                searchIcon.style.display = 'none';
+                searchInputMobile.focus();
+            });
+
+            // Cerrar el buscador móvil al hacer clic en el botón de cerrar
+            closeSearch.addEventListener('click', (e) => {
+                e.stopPropagation();
+                searchFormMobile.classList.remove('active');
+                searchIcon.style.display = 'block';
+                searchInputMobile.value = '';
+                searchContainerMobile.style.display = 'none';
+            });
+
+            // Cerrar el buscador móvil al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!searchFormMobile.contains(e.target) && !searchIcon.contains(e.target)) {
+                    searchFormMobile.classList.remove('active');
+                    searchIcon.style.display = 'block';
+                    searchInputMobile.value = '';
+                    searchContainerMobile.style.display = 'none';
+                }
+            });
+
+            // Evitar que el clic dentro del formulario móvil cierre el buscador
+            searchFormMobile.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Limpiar campo de búsqueda (pantallas pequeñas)
+            searchInputMobile.addEventListener('input', () => {
+                searchInputMobile.value = searchInputMobile.value.trimStart();
+            });
+
+            // Actualizar el estado del buscador al cambiar el tamaño de la ventana
+            window.addEventListener('resize', updateSearchState);
+
+            // Renderizar notificaciones dinámicamente
+            const notificationPanel = document.getElementById('notificationPanel');
+            const notificationIcon = document.querySelector('.nav-icon.notification');
+            const markReadCheckbox = document.getElementById('markReadCheckbox');
+            const maxNotifications = 10;
+
+            function updateNotificationCount() {
+                const unreadCount = notifications.filter(notif => !notif.read).length;
+                notificationIcon.setAttribute('data-count', unreadCount);
+            }
+
+            function renderNotifications() {
+                const existingHeader = notificationPanel.querySelector('.notification-header');
+                notificationPanel.innerHTML = '';
+                notificationPanel.appendChild(existingHeader);
+
+                const recentNotifications = notifications.slice(-maxNotifications);
+                recentNotifications.forEach(notif => {
+                    const notifBody = document.createElement('div');
+                    notifBody.className = 'notification-body';
+                    notifBody.innerHTML = `
+                        <div class="notification-text">
+                            ${notif.text}
+                            <br>
+                            <span class="notification-time">${notif.time}</span>
+                            <br>
+                            <a href="/notificaciones" class="notification-link">${notif.link}</a>
+                        </div>
+                    `;
+                    notificationPanel.appendChild(notifBody);
+                });
+
+                const seeAll = document.createElement('div');
+                seeAll.className = 'see-all';
+                seeAll.innerHTML = '<a href="/notificaciones">Ver todo</a>';
+                notificationPanel.appendChild(seeAll);
+
+                updateNotificationCount();
+            }
+
+            markReadCheckbox.addEventListener('change', () => {
+                if (markReadCheckbox.checked) {
+                    notifications.forEach(notif => notif.read = true);
+                    renderNotifications();
+                    markReadCheckbox.checked = false;
+                }
+            });
+
+            function addNotification(newNotif) {
+                notifications.push({
+                    text: newNotif.text,
+                    time: newNotif.time,
+                    link: newNotif.link,
+                    read: false
+                });
+                if (notifications.length > maxNotifications) {
+                    notifications.shift();
+                }
+                renderNotifications();
+            }
+
+            function simulateNewNotification() {
+                const newNotif = {
+                    text: "Nueva notificación: Actualización en el curso",
+                    time: "hace 1 minuto",
+                    link: "Ver notificación completa",
+                    read: false
+                };
+                addNotification(newNotif);
+            }
+
+            renderNotifications();
+
+            document.addEventListener('click', (e) => {
+                if (!notificationPanel.contains(e.target) && !notificationIcon.contains(e.target)) {
+                    notificationPanel.style.display = 'none';
+                }
+            });
+
+            document.getElementById('currentYear') && (document.getElementById('currentYear').textContent = new Date().getFullYear());
+
+            setTimeout(simulateNewNotification, 5000);
+
+            // Dynamically Set Center Column Height
+            const navbar = document.querySelector('.navbar');
+            const centerColumnContent = document.getElementById('centerColumnContent');
+            const gridContainer = document.querySelector('.grid-container');
+            const centerColumnGridItem = document.querySelector('.grid-column:nth-child(2) .grid-item');
+
+            function setCenterColumnHeight() {
+                const viewportHeight = window.innerHeight;
+                const navbarHeight = navbar.offsetHeight;
+                const gridContainerPaddingTop = parseFloat(getComputedStyle(gridContainer).paddingTop);
+                const gridContainerPaddingBottom = parseFloat(getComputedStyle(gridContainer).paddingBottom);
+                const availableHeight = viewportHeight - navbarHeight - gridContainerPaddingTop - gridContainerPaddingBottom;
+
+                gridContainer.style.height = `${availableHeight}px`;
+                centerColumnGridItem.style.height = `${availableHeight}px`;
+                centerColumnContent.style.height = `${availableHeight}px`;
+            }
+
+            setCenterColumnHeight();
+            window.addEventListener('resize', setCenterColumnHeight);
+
+            // Dynamic Post Generation
+            let postCounter = 0;
+            const loggedInUser = "Usuario 1"; // Simulating the logged-in user
+
+            function createPost(postNumber) {
+                const username = `Usuario ${postNumber}`;
+                const isPostCreator = loggedInUser === username; // Check if the logged-in user is the creator
+
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post-card';
+                postDiv.innerHTML = `
+                    <div class="post-header">
+                        <a th:href="@{/post}" class="post-link">
+                            <div class="d-flex align-items-center">
+                                <img src="/img/perfil.jpg" alt="Avatar de usuario" class="post-avatar" loading="lazy">
+                                <div class="post-user-info">
+                                    <div class="post-username">${username}</div>
+                                    <div class="post-timestamp">hace ${Math.floor(Math.random() * 60)} minutos</div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown post-menu" onclick="event.stopPropagation()">
+                            <a href="#" class="nav-icon" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opciones del post" onclick="event.stopPropagation()">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                            <ul class="dropdown-menu" onclick="event.stopPropagation()">
+                                ${isPostCreator ? `
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Editar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash"></i> Ocultar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Eliminar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-share"></i> Compartir</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-flag"></i> Reportar</a></li>
+                                ` : `
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash"></i> Ocultar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-share"></i> Compartir</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-flag"></i> Reportar</a></li>
+                                `}
+                            </ul>
+                        </div>
+                    </div>
+                    <a th:href="@{/post}" class="post-link">
+                        <h5 class="post-title">Post ${postNumber}</h5>
+                        <img src="/img/post.png" alt="Imagen del post" class="post-image" loading="lazy">
+                        <div class="post-body">
+                            <p class="post-text">Este es el contenido del post ${postNumber}. Lorem ipsum dolor sit amet consectetur adipiscing elit felis dis, mattis interdum dapibus class mi conubia duis quam pharetra, accumsan ut leo cum volutpat donec phasellus per. Erat tortor tempor penatibus varius vel nisi urna sagittis, conubia integer semper ultrices maecenas diam nascetur, nostra velit facilisis sociis laoreet duis ornare. Gravida quisque tristique semper nullam lobortis lacinia dignissim elementum, arcu sed nunc habitasse et nascetur proin, vulputate in ridiculus taciti id magnis varius augue, potenti pellentesque tempor ac enim dis.
+                                Magna laoreet dictum augue eros orci ridiculus aliquet bibendum, urna pharetra fringilla dis aptent auctor risus vitae enim, lacus commodo congue habitasse hac porttitor mi. Interdum dignissim orci volutpat porttitor at erat sociosqu, nisi class quisque malesuada suspendisse odio enim, ultricies lacus leo lacinia torquent varius. Aliquam arcu vitae id tincidunt lobortis duis eros, massa mauris congue aptent vulputate fusce.</p>
+                            <a href="#" class="post-read-more">Leer más</a>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <i class="bi bi-heart"></i>
+                                <span>${Math.floor(Math.random() * 100)}</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="bi bi-chat"></i>
+                                <span>${Math.floor(Math.random() * 50)}</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="bi bi-share"></i>
+                                <span>${Math.floor(Math.random() * 20)}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                return postDiv;
+            }
+
+            function loadMorePosts(count = 3) {
+                for (let i = 0; i < count; i++) {
+                    postCounter++;
+                    const newPost = createPost(postCounter);
+                    const bannerAds = centerColumnContent.querySelector('.banner-ads');
+                    centerColumnContent.insertBefore(newPost, bannerAds);
+                }
+            }
+
+            // Initial load of posts
+            loadMorePosts(5); // Load 5 posts initially
+
+            // Infinite scroll logic
+            centerColumnContent.addEventListener('scroll', () => {
+                const { scrollTop, scrollHeight, clientHeight } = centerColumnContent;
+                if (scrollHeight - scrollTop - clientHeight < 100) {
+                    loadMorePosts();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
