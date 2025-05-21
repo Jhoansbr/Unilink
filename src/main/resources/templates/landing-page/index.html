@@ -25,7 +25,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!-- Navigation Bar -->
     <nav>
         <div class="logo-container">
-            <a href="#inicial"><img src="img/logo_oscuro_sf.png" alt="logo Blog" class="logo_menu"></a>
+            <a href="#inicial"><img th:src="@{img/logo_oscuro_sf.png}" alt="logo Blog" class="logo_menu"></a>
         </div>
         <div class="nav-menu">
             <ul>
@@ -64,10 +64,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
             <div class="carousel-images">
                 <img th:src="@{/img/LDM.png}" alt="Equipo trabajando">
                 <img th:src="@{/img/LDT.png}" alt="Reunión creativa">
-                <img thsrc="img/TDU.png" alt="Colaboración en equipo">
-                <img src="img/TDU.png" alt="Colaboración en equipo">
-                <img src="img/TDU.png" alt="Colaboración en equipo">
-                <img src="img/TDU.png" alt="Colaboración en equipo">
+                <img th:src="img/TDU.png" alt="Colaboración en equipo">
+                <img th:src="@{img/TDU.png}" alt="Colaboración en equipo">
+                <img th:src="@{img/TDU.png}" alt="Colaboración en equipo">
+                <img th:src="@{img/TDU.png}" alt="Colaboración en equipo">
             </div>
             <button class="carousel-btn" id="prev-btn">❮</button>
             <button class="carousel-btn" id="next-btn">❯</button>
