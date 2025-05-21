@@ -1,0 +1,179 @@
+<html lang="es" 
+xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/icono.ico" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/Style_landingpage.css}">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <title>UniLink</title>
+</head>
+<style>
+    #inicio {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/fondo.jpg') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+}
+</style>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo-container">
+            <a href="#inicial"><img src="img/logo_oscuro_sf.png" alt="logo Blog" class="logo_menu"></a>
+        </div>
+        <div class="nav-menu">
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#vision-mision">Visión y Misión</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#comentarios">Comentarios</a></li>
+            </ul>
+            <a th:href="@{/entrar}" class="login-btn">Iniciar Sesión</a>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section id="inicio">
+        <h1>Este blog nació de la necesidad de crear un espacio donde las personas puedan encontrar inspiración, aprender algo nuevo y conectarse con una comunidad que comparte sus intereses. Queremos ser un puente entre el conocimiento y las personas.
+    </section>
+
+    <!-- Vision y Mision Section -->
+    <section id="vision-mision">
+        <div class="vision-mision-container">
+            <div class="vision-mision-card">
+                <h2>Misión</h2>
+                <p>Nuestra misión es inspirar a las personas a través de contenido significativo que fomente el aprendizaje y el crecimiento personal. Buscamos crear un espacio donde las ideas fluyan libremente y las comunidades se conecten en torno al conocimiento.</p>
+            </div>
+            <div class="vision-mision-card">
+                <h2>Visión</h2>
+                <p>Nuestra visión es convertirnos en un referente global de inspiración y aprendizaje, conectando a personas de todo el mundo mediante contenido innovador y accesible que promueva el desarrollo continuo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nosotros Section with Carousel -->
+    <section id="nosotros">
+        <h2>Nosotros</h2>
+        <p>Somos un equipo de creadores apasionados por compartir historias, ideas y experiencias. Nos dedicamos a construir una comunidad que valore el aprendizaje y la creatividad.</p>
+        <div class="carousel">
+            <div class="carousel-images">
+                <img th:src="@{/img/LDM.png}" alt="Equipo trabajando">
+                <img th:src="@{/img/LDT.png}" alt="Reunión creativa">
+                <img thsrc="img/TDU.png" alt="Colaboración en equipo">
+                <img src="img/TDU.png" alt="Colaboración en equipo">
+                <img src="img/TDU.png" alt="Colaboración en equipo">
+                <img src="img/TDU.png" alt="Colaboración en equipo">
+            </div>
+            <button class="carousel-btn" id="prev-btn">❮</button>
+            <button class="carousel-btn" id="next-btn">❯</button>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section id="comentarios">
+        <h2>Comentarios</h2>
+        <div class="comments-container">
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 1">
+                <div class="comment-text">
+                    <p>"Este blog me ha inspirado mucho. ¡El contenido es increíble!"</p>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 2">
+                <div class="comment-text">
+                    <p>"Me encanta la variedad de temas que tratan. Muy recomendable."</p>
+                    <div class="stars">★★★★☆</div>
+                </div>
+            </div>
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 3">
+                <div class="comment-text">
+                    <p>"Una gran fuente de inspiración y aprendizaje. ¡Sigan así!"</p>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 3">
+                <div class="comment-text">
+                    <p>"Una gran fuente de inspiración y aprendizaje. ¡Sigan así!"</p>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 3">
+                <div class="comment-text">
+                    <p>"Una gran fuente de inspiración y aprendizaje. ¡Sigan así!"</p>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="comment">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" alt="Persona 3">
+                <div class="comment-text">
+                    <p>"Una gran fuente de inspiración y aprendizaje. ¡Sigan así!"</p>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer_page">
+    <div class="container text-center">
+        <p class="footer-text">Copyright &copy; UniLink 2025</p>
+        <div class="footer-links">
+            <a href="#vision-mision" class="footer-link">Mision y Vision</a> |
+            <a href="#nosotros" class="footer-link">Nosotros</a> |
+            <a href="#comentarios" class="footer-link">Comentarios</a>
+        </div>
+        <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Carousel functionality
+        const carouselImages = document.querySelector('.carousel-images');
+        const images = document.querySelectorAll('.carousel-images img');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        let currentIndex = 0;
+
+        function showImage(index) {
+            if (index >= images.length) {
+                currentIndex = 0;
+            } else if (index < 0) {
+                currentIndex = images.length - 1;
+            } else {
+                currentIndex = index;
+            }
+            carouselImages.style.transform = `translateX(${-currentIndex * 100}%)`;
+        }
+
+        prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
+        nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
+
+        // Auto-scroll carousel every 5 seconds
+        setInterval(() => showImage(currentIndex + 1), 5000);
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e4475249674587',t:'MTc0Njk5Mzc5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93e9706f0e2953be',t:'MTc0NzA0NzkwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
