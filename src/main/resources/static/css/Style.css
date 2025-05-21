@@ -1,0 +1,315 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-image: url('img/fondoverde.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background 0.3s ease;
+}
+
+body.dark-theme {
+  background: #1c2526;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInTitle {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 1205px;
+  margin: auto;
+  margin-top: 60px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative; /* Para posicionar el botón de tema */
+}
+
+body.dark-theme .container {
+  background: rgba(40, 40, 40, 0.9);
+  color: #fff;
+}
+
+h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  background: linear-gradient(to right, #1c1c1c, #4b4b4b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeInTitle 1.3s ease;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: space-between; /* Mantiene el botón a la izquierda y el search-container a la derecha */
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #218838;
+}
+
+.search-container {
+  display: flex;
+  gap: 10px;
+}
+
+#searchInput {
+  padding: 10px;
+  width: 250px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+#searchButton {
+  background-color: #007bff;
+}
+
+#searchButton:hover {
+  background-color: #0056b3;
+}
+
+#clearButton {
+  background-color: #dc3545;
+}
+
+#clearButton:hover {
+  background-color: #c82333;
+}
+
+#themeToggle {
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #333;
+  position: absolute; /* Posicionarlo en la esquina superior derecha */
+  top: 1rem;
+  right: 1rem;
+}
+
+body.dark-theme #themeToggle {
+  color: #fff;
+}
+
+.table-container {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+body.dark-theme th {
+  background-color: #444;
+  color: #fff;
+}
+
+tbody tr {
+  transition: all 0.3s ease;
+}
+
+body.dark-theme tbody tr {
+  color: #ddd;
+}
+
+tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+body.dark-theme tbody tr:hover {
+  background-color: rgba(60, 60, 60, 0.9);
+}
+
+.btn-edit, .btn-delete, .btn-photo {
+  padding: 6px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 17px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform 0.2s ease;
+}
+
+.btn-edit {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #2980b9;
+}
+
+.btn-photo {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-photo:hover {
+  background-color:rgb(25, 137, 51);
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: rgb(175, 108, 0);
+}
+
+#modalFormulario, #modalFoto {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  max-width: 400px;
+  margin: 3.5% auto;
+  padding: 1.5rem;
+  border-radius: 12px;
+  position: relative;
+  animation: fadeIn 0.5s ease;
+}
+
+body.dark-theme .modal-content {
+  background: rgba(40, 40, 40, 0.9);
+  color: #fff;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  margin-right: 10px;
+  transition: transform 0.2s ease;
+}
+
+.modal-content button:hover {
+  transform: scale(1.05);
+}
+
+#loader {
+  color: #333;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+body.dark-theme #loader {
+  color: #ddd;
+}
+
+#fotoContainer img {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+body.dark-theme #fotoContainer img {
+  border-color: #555;
+}
+
+#fotoContainer p {
+  margin: 0;
+  font-style: italic;
+  color: #666;
+}
+
+body.dark-theme #fotoContainer p {
+  color: #bbb;
+}
+
+#botonesFoto {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
