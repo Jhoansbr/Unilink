@@ -1,12 +1,16 @@
 package com.example.Unilink.Controller;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -14,95 +18,55 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.Unilink.Modelo.Rol;
 import com.example.Unilink.Modelo.User;
 import com.example.Unilink.interfaces.UserRepository;
+import com.example.Unilink.service.UserService;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
 import com.example.Unilink.utils.JwtUtil;
+
 @Controller
 public class LoginController {
-	
+
 	@Autowired
-	private UserRepository usuarioRepository;
-	
-	@Autowired
-	private JwtUtil jwtUtil;
-	String vemail="";
-	String vpassword="";
-	
+	private UserService userService;
+
+	@GetMapping("/login")
+	public String showLoginForm(Model model) {
+		model.addAttribute("user", new User());
+		return "login";
+	}
+
 	@PostMapping("/login")
-	public String login(@RequestParam String email, @RequestParam String password, HttpServletResponse response,
-			RedirectAttributes redirectAttributes, Model model) {
-		vemail=email;
-		vpassword=password;
-		User user = usuarioRepository.findByEmailAndContrasena(email, password).orElse(null);
-
-		if (user != null) {
-			String token = jwtUtil.generateToken(email);
-
-			Cookie cookie = new Cookie("jwt", token);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			cookie.setMaxAge(3600); // 1 hora
-			response.addCookie(cookie);
-			System.out.println("Cookie JWT generada para el usuario: " + email);
-			Rol rol = user.getRol();
-			if (rol != null) {
-				int rolIdInt = rol.getIdRol().intValue(); // Convierte a int si lo necesitas
-
-				if (rolIdInt == 1) {
-					return "redirect:/admin/dashboard";
-				} else {
-					return "redirect:/cliente/inicio";
-				}
-			} else {
-				redirectAttributes.addFlashAttribute("error", "Acceso inválido. Por favor, inténtelo otra vez.");
-				return "redirect:/entrar";
-			}
-
+	public String login(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "login";
+		}
+		Optional<User> authenticatedUser = userService.authenticateUser(user.getEmail(), user.getContrasena());
+		if (authenticatedUser.isPresent()) {
+			// Aquí generar token JWT y crear cookie (omito por simplicidad)
+			model.addAttribute("usuario", authenticatedUser.get().getEmail());
+			model.addAttribute("rol", authenticatedUser.get().getRol());
+			return "home";
 		} else {
-			redirectAttributes.addFlashAttribute("error", "Acceso inválido. Por favor, inténtelo otra vez.");
-			return "redirect:/entrar";
+			model.addAttribute("error", "Credenciales incorrectas");
+			return "login";
 		}
 	}
 
-	@GetMapping("/admin/dashboard")
-	public String adminHome(Model model) {
-		String displayName = getLoggedUserDisplayName();
-		model.addAttribute("displayName", displayName != null ? displayName : "Usuario no identificado");
-		return "admin/index";
+	@GetMapping("/register")
+	public String showRegisterForm(Model model) {
+		model.addAttribute("user", new User());
+		return "register";
 	}
 
-	@GetMapping("/cliente/inicio")
-	public String clienteHome(Model model) {
-		
-		 
-
-
-	  
-		return "blog/index";
-	}
-
-	@GetMapping("/custom-logout")
-	public String logout(HttpServletResponse response) {
-		Cookie cookie = new Cookie("jwt", null);
-		cookie.setHttpOnly(true);
-		cookie.setPath("/");
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
-		System.out.println("Cookie JWT eliminada al cerrar sesión");
-		return "redirect:/entrar";
-	}
-
-	private String getLoggedUserDisplayName() {
-		try {
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			if (userDetails != null) {
-				String username = userDetails.getUsername();
-				return username.split("@")[0];
-			}
-		} catch (Exception e) {
-			System.out.println("Error al obtener el usuario autenticado: " + e.getMessage());
+	@PostMapping("/register")
+	public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "register";
 		}
-		return null;
+		userService.registerUser(user);
+		return "redirect:/login";
 	}
 }

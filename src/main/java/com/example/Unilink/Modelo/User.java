@@ -1,55 +1,37 @@
 package com.example.Unilink.Modelo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
-    private Integer id;
+    private Long id;
 
-    private String nombre;
-    private String apellido;
+    @Email
+    @NotBlank
+    @Column(unique = true)
     private String email;
 
-    @JsonIgnore
+    @NotBlank
+    @Size(min = 8)
     private String contrasena;
 
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro = LocalDateTime.now();
+    @NotBlank
+    private String rol;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "rol", referencedColumnName = "idRol")
-    private Rol rol;
-
-    // Getters y Setters
-    public Integer getId() {
+    // getters y setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -68,19 +50,11 @@ public class User {
         this.contrasena = contrasena;
     }
 
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public Rol getRol() {
+    public String getRol() {
         return rol;
     }
 
-    public void setRol(Rol rol) {
+    public void setRol(String rol) {
         this.rol = rol;
     }
 }
