@@ -1,6 +1,12 @@
 package com.example.Unilink.Modelo;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "rol")
 public class Rol {
@@ -11,7 +17,6 @@ public class Rol {
 
 	@Column(name = "nombre_rol", nullable = false)
 	private String nombre_rol;
-	// Getters y setters
 
 	public Long getIdRol() {
 		return idRol;
@@ -21,14 +26,14 @@ public class Rol {
 		this.idRol = idRol;
 	}
 
-	public String getNombreRol() {
+	public String getNombre_rol() {
 		return nombre_rol;
 	}
 
-	public Rol() {
+	public void setNombre_rol(String nombre_rol) {
+		this.nombre_rol = nombre_rol;
 	}
 
-	public void setNombreRol(String nombreRol) {
-		this.nombre_rol = nombreRol;
+	public Rol() {
 	}
 }
