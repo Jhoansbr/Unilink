@@ -1,7 +1,9 @@
 package com.example.Unilink.Controller;
 
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
+@ControllerAdvice
 public class GlobalExceptionHandler {
     public String handleAllExceptions(Exception ex, Model model) {
         model.addAttribute("errorMessage", "Error: " + ex.getMessage());
