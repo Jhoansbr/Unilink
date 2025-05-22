@@ -1,47 +1,25 @@
 package com.example.Unilink.Modelo;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuarios")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "id_usuario") // Map to the correct column name
     private Integer id;
 
-    @NotBlank
-    @Column(name = "nombre")
     private String nombre;
-
-    @NotBlank
-    @Column(name = "apellido")
     private String apellido;
-
-    @Email
-    @NotBlank
-    @Column(name = "email", unique = true)
     private String email;
-
-    @NotBlank
-    @Size(min = 8)
-    @Column(name = "contrasena")
     private String contrasena;
+    private LocalDateTime fecha_registro;
+    private int rol;
 
-    @Column(name = "fecha_registro", nullable = false)
-    private LocalDateTime fechaRegistro;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "rol", referencedColumnName = "idRol")
-    private Rol rol;
-    // Getters y setters
-
-    public User() {
-    }
-
+    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -82,20 +60,19 @@ public class User {
         this.contrasena = contrasena;
     }
 
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
+    public LocalDateTime getFecha_registro() {
+        return fecha_registro;
     }
 
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
+    public void setFecha_registro(LocalDateTime fecha_registro) {
+        this.fecha_registro = fecha_registro;
     }
 
-    public Rol getRol() {
+    public int getRol() {
         return rol;
     }
 
-    public void setRol(Rol rol) {
+    public void setRol(int rol) {
         this.rol = rol;
     }
-
 }

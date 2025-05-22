@@ -42,7 +42,7 @@ public class LoginController {
 			cookie.setMaxAge(3600); // 1 hora
 			response.addCookie(cookie);
 			System.out.print("Esta entrando en el controlador ");
-			int rol = userOpt.get().getRol().getIdRol().intValue();
+			int rol = userOpt.get().getRol();
 			if (rol == 1) {
 				return "redirect:/admin/dashboard";
 			} else {
