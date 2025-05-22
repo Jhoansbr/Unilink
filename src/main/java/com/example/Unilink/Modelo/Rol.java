@@ -1,25 +1,20 @@
 package com.example.Unilink.Modelo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
-
+@Table(name = "roles") // Opcional, si tu tabla no se llama "rol"
 public class Rol {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idRol") // Para asegurar coincidencia con User.java
 	private Long idRol;
 
-	@Column(name = "nombre_rol")
+	@Column(name = "nombre_rol", nullable = false, unique = true)
 	private String nombreRol;
 
-	public String getNombreRol() {
-		return nombreRol;
-	}
-
+	// Getters y Setters
 	public Long getIdRol() {
 		return idRol;
 	}
@@ -28,8 +23,11 @@ public class Rol {
 		this.idRol = idRol;
 	}
 
+	public String getNombreRol() {
+		return nombreRol;
+	}
+
 	public void setNombreRol(String nombreRol) {
 		this.nombreRol = nombreRol;
 	}
-
 }

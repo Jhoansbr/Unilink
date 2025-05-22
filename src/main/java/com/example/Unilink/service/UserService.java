@@ -26,7 +26,7 @@ public class UserService {
             return "El correo ya está registrado.";
         }
 
-        user.setFecha_registro(LocalDateTime.now());
+        user.setFechaRegistro(LocalDateTime.now());
         userRepository.save(user);
         return "Usuario registrado exitosamente.";
     }

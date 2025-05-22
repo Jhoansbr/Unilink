@@ -1,11 +1,13 @@
 package com.example.Unilink.Modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -14,8 +16,12 @@ public class User {
     private String nombre;
     private String apellido;
     private String email;
+
+    @JsonIgnore
     private String contrasena;
-    private LocalDateTime fecha_registro;
+
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol", referencedColumnName = "idRol")
@@ -62,12 +68,12 @@ public class User {
         this.contrasena = contrasena;
     }
 
-    public LocalDateTime getFecha_registro() {
-        return fecha_registro;
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setFecha_registro(LocalDateTime fecha_registro) {
-        this.fecha_registro = fecha_registro;
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
     public Rol getRol() {
