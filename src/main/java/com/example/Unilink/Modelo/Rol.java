@@ -20,4 +20,16 @@ public class Rol {
 		return nombreRol;
 	}
 
+	public Long getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(Long idRol) {
+		this.idRol = idRol;
+	}
+
+	public void setNombreRol(String nombreRol) {
+		this.nombreRol = nombreRol;
+	}
+
 }

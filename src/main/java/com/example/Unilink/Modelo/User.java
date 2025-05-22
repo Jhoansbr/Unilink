@@ -1,14 +1,14 @@
 package com.example.Unilink.Modelo;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario") // Map to the correct column name
+    @Column(name = "id_usuario")
     private Integer id;
 
     private String nombre;
@@ -16,9 +16,12 @@ public class User {
     private String email;
     private String contrasena;
     private LocalDateTime fecha_registro;
-    private int rol;
 
-    // Getters and Setters
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol", referencedColumnName = "idRol")
+    private Rol rol;
+
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -67,11 +70,11 @@ public class User {
         this.fecha_registro = fecha_registro;
     }
 
-    public int getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(int rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 }

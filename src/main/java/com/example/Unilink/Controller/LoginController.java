@@ -1,7 +1,5 @@
 package com.example.Unilink.Controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.Unilink.Modelo.Rol;
 import com.example.Unilink.Modelo.User;
 import com.example.Unilink.interfaces.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -45,12 +44,20 @@ public class LoginController {
 			cookie.setMaxAge(3600); // 1 hora
 			response.addCookie(cookie);
 			System.out.println("Cookie JWT generada para el usuario: " + email);
-			int rol = user.getRol();
-			if (rol == 1) {
-				return "redirect:/admin/dashboard";
+			Rol rol = user.getRol();
+			if (rol != null) {
+				int rolIdInt = rol.getIdRol().intValue(); // Convierte a int si lo necesitas
+
+				if (rolIdInt == 1) {
+					return "redirect:/admin/dashboard";
+				} else {
+					return "redirect:/cliente/inicio";
+				}
 			} else {
-                return "redirect:/cliente/inicio";
+				redirectAttributes.addFlashAttribute("error", "Acceso inválido. Por favor, inténtelo otra vez.");
+				return "redirect:/entrar";
 			}
+
 		} else {
 			redirectAttributes.addFlashAttribute("error", "Acceso inválido. Por favor, inténtelo otra vez.");
 			return "redirect:/entrar";
