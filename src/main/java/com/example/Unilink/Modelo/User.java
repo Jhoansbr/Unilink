@@ -5,15 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "usuarios")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
-    private Integer id; // Cambiado a Integer para coincidir con INT
+    private Integer id;
 
     @NotBlank
     @Column(name = "nombre")
@@ -38,9 +36,12 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol", referencedColumnName = "idRol")
-    private Rol rol; // Relación con la entidad Rol
+    private Rol rol;
+    // Getters y setters
 
-    // Getters y Setters
+    public User() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -96,4 +97,5 @@ public class User {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
 }

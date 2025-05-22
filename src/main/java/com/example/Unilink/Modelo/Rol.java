@@ -1,20 +1,18 @@
 package com.example.Unilink.Modelo;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "rol")
 public class Rol {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idRol")
-	private Long idRol; // Cambiado a Long para coincidir con BIGINT
+	private Long idRol;
 
 	@Column(name = "nombre_rol", nullable = false)
 	private String nombreRol;
+	// Getters y setters
 
-	// Getters y Setters
 	public Long getIdRol() {
 		return idRol;
 	}
@@ -25,6 +23,9 @@ public class Rol {
 
 	public String getNombreRol() {
 		return nombreRol;
+	}
+
+	public Rol() {
 	}
 
 	public void setNombreRol(String nombreRol) {
