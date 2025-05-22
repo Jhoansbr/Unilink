@@ -4,34 +4,65 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usuarios")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id_usuario")
+    private Integer id; // Cambiado a Integer para coincidir con INT
+
+    @NotBlank
+    @Column(name = "nombre")
+    private String nombre;
+
+    @NotBlank
+    @Column(name = "apellido")
+    private String apellido;
 
     @Email
     @NotBlank
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @NotBlank
     @Size(min = 8)
+    @Column(name = "contrasena")
     private String contrasena;
 
-    @NotBlank
-    private String rol;
+    @Column(name = "fecha_registro", nullable = false)
+    private LocalDateTime fechaRegistro;
 
-    // getters y setters
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol", referencedColumnName = "idRol")
+    private Rol rol; // Relación con la entidad Rol
+
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -50,11 +81,19 @@ public class User {
         this.contrasena = contrasena;
     }
 
-    public String getRol() {
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 }
