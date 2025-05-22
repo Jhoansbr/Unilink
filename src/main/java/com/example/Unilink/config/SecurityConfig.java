@@ -35,16 +35,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**", "/favicon.ico").permitAll()
-                                .requestMatchers("/", "/home", "/login", "/entrar", "/Registro", "/Registrarse", "/forgot-password", "/reset-password", "/authenticate", "/logout").permitAll()
-                                .requestMatchers("/api/**").authenticated()
-                                .anyRequest().permitAll()
-                )
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/entrar", "/Registro", "/Registrarse",
+                                "/forgot-password", "/reset-password", "/authenticate", "/logout")
+                        .permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
                 .logout(logout -> logout
-                                .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login") // puedes poner tu página aquí
-                                .permitAll()
-                );
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login") // puedes poner tu página aquí
+                        .permitAll());
 
         return http.build();
     }
